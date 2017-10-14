@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  
+  <project path="bootable/recovery-twrp" name="omnirom/android_bootable_recovery" remote="github" revision="android-6.0" groups="pdk-cw-fs"/>
+
+  <project path="external/busybox" name="LineageOS/android_external_busybox" />
+  <project path="external/stlport" name="LineageOS/android_external_stlport" />
+
+  <project path="hardware/samsung" name="mosajon/android_hardware_samsung" />
+
+  <project path="packages/apps/SamsungServiceMode" name="LineageOS/android_packages_apps_SamsungServiceMode" />
+
+  <project path="kernel/samsung/exynos5410" name="mosajon/android_kernel_samsung_exynos5410" />
+  <project path="device/samsung/i959" name="mosajon/android_device_samsung_i959" />
+  <project path="vendor/samsung/i959" name="mosajon/android_vendor_samsung_i959" />
+
+  <project path="hardware/samsung_slsi-cm/exynos" name="LineageOS/android_hardware_samsung_slsi-cm_exynos" />
+  <project path="hardware/samsung_slsi-cm/exynos5" name="LineageOS/android_hardware_samsung_slsi-cm_exynos5" />
+  <project path="hardware/samsung_slsi-cm/exynos5410" name="mosajon/android_hardware_samsung_slsi-cm_exynos5410" />
+  <project path="hardware/samsung_slsi-cm/openmax" name="LineageOS/android_hardware_samsung_slsi-cm_openmax" />
+
+</manifest>
