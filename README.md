@@ -19,18 +19,25 @@ repo sync -j20 --force-sync
     You are good to go, proceed with the compiling process OPTIONAL (if you want built-in root support):
 
 export WITH_SU=true
+
 export WITH_TWRP=true
 
 copy these:
+
 device/samsung/ja3gduosctc/configs/etc/spn-conf.xml
+
 packages/apps/OTAUpdates
 
 cd '/path/to/lineageos14.1'
+
 patch -p1 < PATCH
 
 cd '/path/to/lineageos14.1'
+
 . build/envsetup.sh
+
 brunch ja3gduosctc
+
 jack-admin kill-server
 
 # HOW-TO Build recovery.tar
