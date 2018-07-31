@@ -6,16 +6,6 @@
   <!-- Remove CM-specific repositories -->
   <remove-project name="SudaMod/android_packages_apps_CMUpdater" />
   <remove-project name="SudaMod/android_packages_apps_CMFileManager" />
-  <remove-project name="SudaMod/android_build" />
-  <remove-project name="SudaMod/android_vendor_sm" />
-  <remove-project name="SudaMod/android_system_extras_su" />
-
-  <project path="build" remote="github" revision="cm-14.1" name="LineageOS/android_build" groups="pdk" >
-    <copyfile src="core/root.mk" dest="Makefile" />
-  </project>
-
-  <project path="vendor/cm" name="LineageOS/android_vendor_cm" remote="github" revision="cm-14.1" />
-  <project path="system/extras/su" name="LineageOS/android_system_extras_su" remote="github" revision="cm-14.1" />
 
   <project path="bootable/recovery-twrp" name="omnirom/android_bootable_recovery" remote="github" revision="android-7.1" groups="pdk-cw-fs"/>
 
