@@ -1,4 +1,4 @@
-#HOW-TO Build
+# HOW-TO Build
 
     Initialize the repository
 
@@ -32,3 +32,16 @@ cd '/path/to/lineageos14.1'
 . build/envsetup.sh
 brunch ja3gduosctc
 jack-admin kill-server
+
+# HOW-TO Build recovery.tar
+
+cd /root/mkbootimg_tools
+./mkboot recovery.img recovery
+cp libbinder.so recovery/ramdisk/sbin
+./mkboot recovery recovery.img
+
+tar -H ustar -c recovery.img > recovery.tar
+md5sum -t recovery.tar >> recovery.tar
+mv recovery.tar TWRP_3.1.1-0_ja3gduosctc.tar
+
+cp recovery.img TWRP_3.1.1-0_ja3gduosctc.img
