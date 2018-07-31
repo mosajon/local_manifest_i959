@@ -1,30 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
   <!--Patcher (run "./Exynos5410_patcher/patch.sh" before each compilation)-->
-  <project path="Exynos5410_patcher" name="Spxg/Exynos5410_patcher" revision="master" />
+  <project path="Exynos5410_patcher" name="Spxg/Exynos5410_patcher" remote="github" revision="master" />
   
   <!-- Remove CM-specific repositories -->
-  <remove-project name="LineageOS/android_packages_apps_Updater" />
+  <remove-project name="SudaMod/android_packages_apps_CMUpdater" />
+  <remove-project name="SudaMod/android_packages_apps_CMFileManager" />
+  <remove-project name="SudaMod/android_build" />
+  <remove-project name="SudaMod/android_vendor_sm" />
+  <remove-project name="SudaMod/android_system_extras_su" />
+
+  <project path="build" remote="github" revision="cm-14.1" name="LineageOS/android_build" groups="pdk" >
+    <copyfile src="core/root.mk" dest="Makefile" />
+  </project>
+
+  <project path="vendor/cm" name="LineageOS/android_vendor_cm" remote="github" revision="cm-14.1" />
+  <project path="system/extras/su" name="LineageOS/android_system_extras_su" remote="github" revision="cm-14.1" />
 
   <project path="bootable/recovery-twrp" name="omnirom/android_bootable_recovery" remote="github" revision="android-7.1" groups="pdk-cw-fs"/>
 
-  <project path="external/busybox" name="LineageOS/android_external_busybox" />
-  <project path="external/stlport" name="LineageOS/android_external_stlport" />
+  <project path="external/busybox" name="LineageOS/android_external_busybox" remote="github" revision="cm-14.1" />
+  <project path="external/stlport" name="LineageOS/android_external_stlport" remote="github" revision="cm-14.1" />
 
-  <project path="hardware/samsung" name="LineageOS/android_hardware_samsung" />
+  <project path="hardware/samsung" name="LineageOS/android_hardware_samsung" remote="github" revision="cm-14.1" />
 
-  <project path="packages/apps/SamsungServiceMode" name="LineageOS/android_packages_apps_SamsungServiceMode" />
-  <project path="packages/providers/LunarInfoProvider" name="ChinaLongma/LunarInfoProvider" revision="master" />
+  <project path="packages/apps/SamsungServiceMode" name="LineageOS/android_packages_apps_SamsungServiceMode" remote="github" revision="cm-14.1" />
 
   <!-- Samsung Galaxy S4 Exynos Repositories -->
-  <project path="device/samsung/exynos5410-common" name="exynos5410/android_device_samsung_exynos5410-common" />
-  <project path="device/samsung/ja3gduosctc" name="exynos5410/android_device_samsung_ja3gduosctc" />
-  <project path="kernel/samsung/exynos5410" name="exynos5410/android_kernel_samsung_exynos5410" />
-  <project path="vendor/samsung" name="Spxg/proprietary_vendor_samsung_ja3gduosctc" revision="master" />
+  <project path="device/samsung/exynos5410-common" name="exynos5410/android_device_samsung_exynos5410-common" remote="github" revision="cm-14.1" />
+  <project path="device/samsung/ja3gduosctc" name="exynos5410/android_device_samsung_ja3gduosctc" remote="github" revision="cm-14.1" />
+  <project path="kernel/samsung/exynos5410" name="exynos5410/android_kernel_samsung_exynos5410" remote="github" revision="cm-14.1" />
+  <project path="vendor/samsung" name="Spxg/proprietary_vendor_samsung_ja3gduosctc" remote="github" revision="master" />
 
-  <project path="hardware/samsung_slsi-cm/exynos" name="LineageOS/android_hardware_samsung_slsi-cm_exynos" />
-  <project path="hardware/samsung_slsi-cm/exynos5" name="LineageOS/android_hardware_samsung_slsi-cm_exynos5" />
-  <project path="hardware/samsung_slsi-cm/exynos5410" name="exynos5410/android_hardware_samsung_slsi-cm_exynos5410" />
-  <project path="hardware/samsung_slsi-cm/openmax" name="LineageOS/android_hardware_samsung_slsi-cm_openmax" />
+  <project path="hardware/samsung_slsi-cm/exynos" name="LineageOS/android_hardware_samsung_slsi-cm_exynos" remote="github" revision="cm-14.1" />
+  <project path="hardware/samsung_slsi-cm/exynos5" name="LineageOS/android_hardware_samsung_slsi-cm_exynos5" remote="github" revision="cm-14.1" />
+  <project path="hardware/samsung_slsi-cm/exynos5410" name="exynos5410/android_hardware_samsung_slsi-cm_exynos5410" remote="github" revision="cm-14.1" />
+  <project path="hardware/samsung_slsi-cm/openmax" name="LineageOS/android_hardware_samsung_slsi-cm_openmax" remote="github" revision="cm-14.1" />
 
 </manifest>
