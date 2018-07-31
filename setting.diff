@@ -1,0 +1,65 @@
+diff -ru "a/packages/apps/Settings/res/values/sm_strings.xml" "b/packages/apps/Settings/res/values/sm_strings.xml"
+--- "a/packages/apps/Settings/res/values/sm_strings.xml"	2017-12-02 17:08:33.000000000 +0800
++++ "b/packages/apps/Settings/res/values/sm_strings.xml"	2017-12-13 00:12:24.360006000 +0800
+@@ -14,7 +14,7 @@
+ -->
+ <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+     <!-- SudaMod Version -->
+-    <string name="suda_version">SudaMod Version</string>
++    <string name="suda_version">LineageOS Version</string>
+     <string name="suda_version_default">Unknow</string>
+     <!-- Kill app long-press back -->
+     <string name="kill_app_longpress_back">Kill app back button</string>
+diff -ru "a/packages/apps/Settings/res/values-zh-rCN/cm_strings.xml" "b/packages/apps/Settings/res/values-zh-rCN/cm_strings.xml"
+--- "a/packages/apps/Settings/res/values-zh-rCN/cm_strings.xml"	2017-12-02 17:08:33.000000000 +0800
++++ "b/packages/apps/Settings/res/values-zh-rCN/cm_strings.xml"	2017-12-12 19:25:37.496578000 +0800
+@@ -51,7 +51,7 @@
+   <!-- About phone screen, build date -->
+   <string name="build_date">编译日期</string>
+   <!-- CM Updater -->
+-  <string name="cmupdate_settings_title">SudaMod 更新</string>
++  <string name="cmupdate_settings_title">LineageOS 更新</string>
+   <!-- Names of categories of app ops tabs - extension of AOSP -->
+   <string name="app_ops_categories_location">位置</string>
+   <string name="app_ops_categories_personal">个人</string>
+diff -ru "a/packages/apps/Settings/res/values-zh-rCN/sm_strings.xml" "b/packages/apps/Settings/res/values-zh-rCN/sm_strings.xml"
+--- "a/packages/apps/Settings/res/values-zh-rCN/sm_strings.xml"	2017-12-02 17:08:33.000000000 +0800
++++ "b/packages/apps/Settings/res/values-zh-rCN/sm_strings.xml"	2017-12-13 00:13:21.331439000 +0800
+@@ -14,7 +14,7 @@
+      limitations under the License.
+ -->
+ <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+-    <string name="suda_version">SudaMod版本</string>
++    <string name="suda_version">LineageOS版本</string>
+     <string name="suda_version_default">未知</string>
+     <string name="kill_app_longpress_back">返回键杀死应用程序</string>
+     <string name="kill_app_longpress_back_summary">通过长时间按下返回键杀死前台应用程序</string>
+diff -ru "a/packages/apps/Settings/res/xml/device_info_settings.xml" "b/packages/apps/Settings/res/xml/device_info_settings.xml"
+--- "a/packages/apps/Settings/res/xml/device_info_settings.xml"	2017-12-02 17:08:33.000000000 +0800
++++ "b/packages/apps/Settings/res/xml/device_info_settings.xml"	2017-12-13 00:15:27.702945000 +0800
+@@ -39,10 +39,10 @@
+                 android:title="@string/cmupdate_settings_title"
+                 android:summary="@string/system_update_settings_list_item_summary"
+                 cm:requiresOwner="true"
+-                cm:requiresPackage="com.sudamod.updater">
++                cm:requiresPackage="org.lineageos.updater">
+             <intent android:action="android.intent.action.MAIN"
+-                    android:targetPackage="com.sudamod.updater"
+-                    android:targetClass="com.cyanogenmod.updater.UpdatesActivity" />
++                    android:targetPackage="org.lineageos.updater"
++                    android:targetClass="org.lineageos.updater.UpdatesActivity" />
+         </cyanogenmod.preference.SelfRemovingPreference>
+ 
+         <!-- Device status - launches activity -->
+diff -ru "a/packages/apps/Settings/src/com/android/settings/DeviceInfoSettings.java" "b/packages/apps/Settings/src/com/android/settings/DeviceInfoSettings.java"
+--- "a/packages/apps/Settings/src/com/android/settings/DeviceInfoSettings.java"	2017-12-02 17:08:33.000000000 +0800
++++ "b/packages/apps/Settings/src/com/android/settings/DeviceInfoSettings.java"	2017-12-13 10:10:30.007588000 +0800
+@@ -145,7 +145,7 @@
+         if(mMbnVersion == null){
+             getPreferenceScreen().removePreference(findPreference(KEY_MBN_VERSION));
+         }
+-        setValueSummary(KEY_MOD_VERSION, "ro.sm.version");
++        setValueSummary(KEY_MOD_VERSION, "ro.cm.version");
+         findPreference(KEY_MOD_VERSION).setEnabled(true);
+         setValueSummary(KEY_MOD_BUILD_DATE, "ro.build.date");
+ 
