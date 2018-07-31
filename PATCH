@@ -1,0 +1,197 @@
+--- a/device/samsung/exynos5410-common/BoardConfigCommon.mk
++++ b/device/samsung/exynos5410-common/BoardConfigCommon.mk
+@@ -18,8 +18,6 @@
+ COMMON_PATH := device/samsung/exynos5410-common
+ 
+ BOARD_VENDOR := samsung
+-
+-TARGET_UNOFFICIAL_BUILD_ID := WEEKLY
+ 
+ # Include path
+ TARGET_SPECIFIC_HEADER_PATH += $(COMMON_PATH)/include
+@@ -100,14 +98,14 @@
+ BLOCK_BASED_OTA := false
+ BOARD_BOOTIMAGE_PARTITION_SIZE := 8388608
+ BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
+-BOARD_CACHEIMAGE_PARTITION_SIZE := 2172649472
++BOARD_CACHEIMAGE_PARTITION_SIZE := 511705088
+ BOARD_FLASH_BLOCK_SIZE := 4096
+ BOARD_RECOVERYIMAGE_PARTITION_SIZE := 8388608
+ BOARD_SYSTEMIMAGE_FILE_SYSTEM_TYPE := ext4
+-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2898264064
++BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2189426688
+ BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := ext4
+ # 9604956160 <real size> - 16384 <encryption footer>
+-BOARD_USERDATAIMAGE_PARTITION_SIZE := 9604939776
++BOARD_USERDATAIMAGE_PARTITION_SIZE := 12809404416
+ TARGET_KERNEL_HAVE_EXFAT := true
+ 
+ # Fonts
+
+--- a/device/samsung/exynos5410-common/exynos5410.mk
++++ b/device/samsung/exynos5410-common/exynos5410.mk
+@@ -16,8 +16,6 @@
+ #
+ 
+ COMMON_PATH := device/samsung/exynos5410-common
+-
+-TARGET_UNOFFICIAL_BUILD_ID := WEEKLY
+ 
+ # overlays
+ DEVICE_PACKAGE_OVERLAYS += $(COMMON_PATH)/overlay
+
+--- a/device/samsung/ja3gduosctc/overlay/frameworks/base/services/core/java/com/android/server/connectivity/NetworkMonitor.java
++++ b/device/samsung/ja3gduosctc/overlay/frameworks/base/services/core/java/com/android/server/connectivity/NetworkMonitor.java
+@@ -86,9 +86,9 @@
+     // Default configuration values for captive portal detection probes.
+     // TODO: append a random length parameter to the default HTTPS url.
+     // TODO: randomize browser version ids in the default User-Agent String.
+-    private static final String DEFAULT_HTTPS_URL     = "https://developers.google.cn/generate_204";
+-    private static final String DEFAULT_HTTP_URL      = "http://www.google.cn/generate_204";
+-    private static final String DEFAULT_FALLBACK_URL  = "http://www.v2ex.com/generate_204";
++    private static final String DEFAULT_HTTPS_URL     = "https://google.cn/generate_204";
++    private static final String DEFAULT_HTTP_URL      = "http://google.cn/generate_204";
++    private static final String DEFAULT_FALLBACK_URL  = "http://google.cn/generate_204";
+     private static final String DEFAULT_USER_AGENT    = "Mozilla/5.0 (X11; Linux x86_64) "
+                                                       + "AppleWebKit/537.36 (KHTML, like Gecko) "
+                                                       + "Chrome/52.0.2743.82 Safari/537.36";
+
+--- a/device/samsung/ja3gduosctc/shims/libsecril-cdma-shim/secril-cdma-shim.c
++++ b/device/samsung/ja3gduosctc/shims/libsecril-cdma-shim/secril-cdma-shim.c
+@@ -1,4 +1,4 @@
+-#define LOG_TAG "secril-shim"
++#define LOG_TAG "secril-cdma-shim"
+ #define RIL_SHLIB
+ 
+ #include <pthread.h>
+
+--- a/device/samsung/ja3gduosctc/BoardConfig.mk
++++ b/device/samsung/ja3gduosctc/BoardConfig.mk
+@@ -62,3 +62,6 @@
+ 
+ # inherit common board flags
+ include device/samsung/exynos5410-common/BoardConfigCommon.mk
++
++export WITH_SU=true
++export WITH_TWRP=true
+
+--- a/device/samsung/ja3gduosctc/device.mk
++++ b/device/samsung/ja3gduosctc/device.mk
+@@ -16,6 +16,10 @@
+ #
+ 
+ LOCAL_PATH := device/samsung/ja3gduosctc
++
++# Carrier SPN
++PRODUCT_COPY_FILES += \
++    $(LOCAL_PATH)/configs/etc/spn-conf.xml:system/etc/spn-conf.xml \
+ 
+ # overlays
+ DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
+
+--- a/device/samsung/ja3gduosctc/full_ja3gduosctc.mk
++++ b/device/samsung/ja3gduosctc/full_ja3gduosctc.mk
+@@ -16,7 +16,7 @@
+ # Inherit from those products. Most specific first.
+ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
+ 
+-# Inherit from ja3gchnduos device
++# Inherit from ja3gduosctc device
+ $(call inherit-product, device/samsung/ja3gduosctc/device.mk)
+ 
+ # Inherit from common board repo
+
+--- a/device/samsung/ja3gduosctc/system.prop
++++ b/device/samsung/ja3gduosctc/system.prop
+@@ -27,5 +27,12 @@
+ # LOW= "0x4f4c";
+ ro.debug_level=0x4948
+ 
++# China Telecom Patch
++persist.sys.timezone=Asia/Shanghai
++ro.build.target_operator=CTC
++ro.cdma.home.operator.numeric=46003
++ro.cdma.home.operator.alpha=中国电信
++ro.ril.oem.nosim.ecclist=911,112,120,122,110,119
++
+ # OTA
+-ro.ota.manifest=https://raw.githubusercontent.com/exynos5410/weekly_ota/cm-14.1/ja3gduosctc.xml
++ro.ota.manifest=https://raw.githubusercontent.com/mosajon/ota_i959/sm-3.1/ja3gduosctc.xml
+
+--- a/packages/services/Telephony/assets/eri.xml
++++ b/packages/services/Telephony/assets/eri.xml
+@@ -19,7 +19,7 @@
+      The icon is turned OFF if then IconIndex = 1 -->
+ 
+ <EriFile VersionNumber="1357"
+-         NumberOfEriEntries="176"
++         NumberOfEriEntries="179"
+          EriFileType="1">
+ 
+          <CallPromptId Id="0"
+@@ -31,6 +31,30 @@
+          <CallPromptId Id="2"
+                        CallPromptText="CallPromptId2"/>
+ 
++         <EriInfo RoamingIndicator="0"
++                  IconIndex="0"
++                  IconMode="0"
++                  EriText="中国电信"
++                  CallPromptId="0"
++                  AlertId="0"
++                  DataServiceSupport="1"/>
++
++         <EriInfo RoamingIndicator="1"
++                  IconIndex="1"
++                  IconMode="0"
++                  EriText="中国电信"
++                  CallPromptId="0"
++                  AlertId="0"
++                  DataServiceSupport="1"/>
++
++         <EriInfo RoamingIndicator="2"
++                  IconIndex="2"
++                  IconMode="1"
++                  EriText="中国电信"
++                  CallPromptId="0"
++                  AlertId="0"
++                  DataServiceSupport="1"/>
++
+          <EriInfo RoamingIndicator="64"
+                   IconIndex="0"
+                   IconMode="0"
+
+--- a/device/samsung/exynos5410-common/system_prop.mk
++++ b/device/samsung/exynos5410-common/system_prop.mk
+@@ -32,7 +32,7 @@
+ 
+ # OTA
+ PRODUCT_PROPERTY_OVERRIDES += \
+-    ro.ota.romname=los-14.1 \
++    ro.ota.romname=sm-3.1 \
+     ro.ota.version=$(shell date +'%Y%m%d')
+ 
+ # OTG
+
+--- a/device/samsung/ja3gduosctc/lineage.mk
++++ b/device/samsung/ja3gduosctc/lineage.mk
+@@ -1,10 +1,10 @@
+ $(call inherit-product, device/samsung/ja3gduosctc/full_ja3gduosctc.mk)
+ 
+ # Inherit some common Lineage stuff.
+-$(call inherit-product, vendor/cm/config/common_full_phone.mk)
++$(call inherit-product, vendor/sm/config/common_full_phone.mk)
+ 
+ 
+-PRODUCT_NAME := lineage_ja3gduosctc
++PRODUCT_NAME := sm_ja3gduosctc
+ PRODUCT_DEVICE := ja3gduosctc
+ 
+ PRODUCT_BUILD_PROP_OVERRIDES += \
+
+--- a/device/samsung/ja3gduosctc/vendorsetup.sh
++++ b/device/samsung/ja3gduosctc/vendorsetup.sh
+@@ -1 +1 @@
+-add_lunch_combo lineage_ja3gduosctc-userdebug
++add_lunch_combo sm_ja3gduosctc-userdebug
+
