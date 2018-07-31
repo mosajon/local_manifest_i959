@@ -1,0 +1,344 @@
+--- a/device/samsung/exynos5410-common/BoardConfigCommon.mk
++++ b/device/samsung/exynos5410-common/BoardConfigCommon.mk
+@@ -19,7 +19,7 @@
+ 
+ BOARD_VENDOR := samsung
+ 
+-TARGET_UNOFFICIAL_BUILD_ID := WEEKLY
++TARGET_UNOFFICIAL_BUILD_ID := SudaMod
+ 
+ # Include path
+ TARGET_SPECIFIC_HEADER_PATH += $(COMMON_PATH)/include
+@@ -100,14 +100,14 @@
+ BLOCK_BASED_OTA := false
+ BOARD_BOOTIMAGE_PARTITION_SIZE := 8388608
+ BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
+-BOARD_CACHEIMAGE_PARTITION_SIZE := 2172649472
++BOARD_CACHEIMAGE_PARTITION_SIZE := 511705088
+ BOARD_FLASH_BLOCK_SIZE := 4096
+ BOARD_RECOVERYIMAGE_PARTITION_SIZE := 8388608
+ BOARD_SYSTEMIMAGE_FILE_SYSTEM_TYPE := ext4
+-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2898264064
++BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2189426688
+ BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := ext4
+ # 9604956160 <real size> - 16384 <encryption footer>
+-BOARD_USERDATAIMAGE_PARTITION_SIZE := 9604939776
++BOARD_USERDATAIMAGE_PARTITION_SIZE := 12809404416
+ TARGET_KERNEL_HAVE_EXFAT := true
+ 
+ # Fonts
+
+--- a/device/samsung/exynos5410-common/exynos5410.mk
++++ b/device/samsung/exynos5410-common/exynos5410.mk
+@@ -17,7 +17,7 @@
+ 
+ COMMON_PATH := device/samsung/exynos5410-common
+ 
+-TARGET_UNOFFICIAL_BUILD_ID := WEEKLY
++TARGET_UNOFFICIAL_BUILD_ID := SudaMod
+ 
+ # overlays
+ DEVICE_PACKAGE_OVERLAYS += $(COMMON_PATH)/overlay
+
+--- a/device/samsung/ja3gduosctc/overlay/frameworks/base/services/core/java/com/android/server/connectivity/NetworkMonitor.java
++++ b/device/samsung/ja3gduosctc/overlay/frameworks/base/services/core/java/com/android/server/connectivity/NetworkMonitor.java
+@@ -86,9 +86,9 @@
+     // Default configuration values for captive portal detection probes.
+     // TODO: append a random length parameter to the default HTTPS url.
+     // TODO: randomize browser version ids in the default User-Agent String.
+-    private static final String DEFAULT_HTTPS_URL     = "https://developers.google.cn/generate_204";
+-    private static final String DEFAULT_HTTP_URL      = "http://www.google.cn/generate_204";
+-    private static final String DEFAULT_FALLBACK_URL  = "http://www.v2ex.com/generate_204";
++    private static final String DEFAULT_HTTPS_URL     = "https://google.cn/generate_204";
++    private static final String DEFAULT_HTTP_URL      = "http://google.cn/generate_204";
++    private static final String DEFAULT_FALLBACK_URL  = "http://google.cn/generate_204";
+     private static final String DEFAULT_USER_AGENT    = "Mozilla/5.0 (X11; Linux x86_64) "
+                                                       + "AppleWebKit/537.36 (KHTML, like Gecko) "
+                                                       + "Chrome/52.0.2743.82 Safari/537.36";
+
+--- a/device/samsung/ja3gduosctc/shims/libsecril-cdma-shim/secril-cdma-shim.c
++++ b/device/samsung/ja3gduosctc/shims/libsecril-cdma-shim/secril-cdma-shim.c
+@@ -1,4 +1,4 @@
+-#define LOG_TAG "secril-shim"
++#define LOG_TAG "secril-cdma-shim"
+ #define RIL_SHLIB
+ 
+ #include <pthread.h>
+
+--- a/device/samsung/ja3gduosctc/BoardConfig.mk
++++ b/device/samsung/ja3gduosctc/BoardConfig.mk
+@@ -62,3 +62,6 @@
+ 
+ # inherit common board flags
+ include device/samsung/exynos5410-common/BoardConfigCommon.mk
++
++export WITH_SU=true
++export WITH_TWRP=true
+
+--- a/device/samsung/ja3gduosctc/device.mk
++++ b/device/samsung/ja3gduosctc/device.mk
+@@ -16,6 +16,10 @@
+ #
+ 
+ LOCAL_PATH := device/samsung/ja3gduosctc
++
++# Carrier SPN
++PRODUCT_COPY_FILES += \
++    $(LOCAL_PATH)/configs/etc/spn-conf.xml:system/etc/spn-conf.xml \
+ 
+ # overlays
+ DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
+
+--- a/device/samsung/ja3gduosctc/full_ja3gduosctc.mk
++++ b/device/samsung/ja3gduosctc/full_ja3gduosctc.mk
+@@ -16,7 +16,7 @@
+ # Inherit from those products. Most specific first.
+ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
+ 
+-# Inherit from ja3gchnduos device
++# Inherit from ja3gduosctc device
+ $(call inherit-product, device/samsung/ja3gduosctc/device.mk)
+ 
+ # Inherit from common board repo
+
+--- a/device/samsung/ja3gduosctc/system.prop
++++ b/device/samsung/ja3gduosctc/system.prop
+@@ -27,5 +27,12 @@
+ # LOW= "0x4f4c";
+ ro.debug_level=0x4948
+ 
++# China Telecom Patch
++persist.sys.timezone=Asia/Shanghai
++ro.build.target_operator=CTC
++ro.cdma.home.operator.numeric=46003
++ro.cdma.home.operator.alpha=中国电信
++ro.ril.oem.nosim.ecclist=911,112,120,122,110,119
++
+ # OTA
+-ro.ota.manifest=https://raw.githubusercontent.com/exynos5410/weekly_ota/cm-14.1/ja3gduosctc.xml
++ro.ota.manifest=https://raw.githubusercontent.com/mosajon/ota_i959/cm-14.1_sudamod/ja3gduosctc.xml
+
+--- a/packages/services/Telephony/assets/eri.xml
++++ b/packages/services/Telephony/assets/eri.xml
+@@ -19,7 +19,7 @@
+      The icon is turned OFF if then IconIndex = 1 -->
+ 
+ <EriFile VersionNumber="1357"
+-         NumberOfEriEntries="176"
++         NumberOfEriEntries="179"
+          EriFileType="1">
+ 
+          <CallPromptId Id="0"
+@@ -31,6 +31,30 @@
+          <CallPromptId Id="2"
+                        CallPromptText="CallPromptId2"/>
+ 
++         <EriInfo RoamingIndicator="0"
++                  IconIndex="0"
++                  IconMode="0"
++                  EriText="中国电信"
++                  CallPromptId="0"
++                  AlertId="0"
++                  DataServiceSupport="1"/>
++
++         <EriInfo RoamingIndicator="1"
++                  IconIndex="1"
++                  IconMode="0"
++                  EriText="中国电信"
++                  CallPromptId="0"
++                  AlertId="0"
++                  DataServiceSupport="1"/>
++
++         <EriInfo RoamingIndicator="2"
++                  IconIndex="2"
++                  IconMode="1"
++                  EriText="中国电信"
++                  CallPromptId="0"
++                  AlertId="0"
++                  DataServiceSupport="1"/>
++
+          <EriInfo RoamingIndicator="64"
+                   IconIndex="0"
+                   IconMode="0"
+
+--- a/build/core/pathmap.mk
++++ b/build/core/pathmap.mk
+@@ -111,6 +111,7 @@
+ 	    media/mca/effect \
+ 	    media/mca/filterfw \
+ 	    media/mca/filterpacks \
++	    suda \
+ 	    drm \
+ 	    opengl \
+ 	    sax \
+
+--- a/frameworks/base/core/jni/android/graphics/BitmapFactory.cpp
++++ b/frameworks/base/core/jni/android/graphics/BitmapFactory.cpp
+@@ -587,8 +587,7 @@
+         return nullObjectReturn("Could not open file");
+     }
+ 
+-    std::unique_ptr<SkFILEStream> fileStream(new SkFILEStream(file,
+-            SkFILEStream::kCallerPasses_Ownership));
++     std::unique_ptr<SkFILEStream> fileStream(new SkFILEStream(file));
+ 
+     // If there is no offset for the file descriptor, we use SkFILEStream directly.
+     if (::lseek(descriptor, 0, SEEK_CUR) == 0) {
+
+--- a/frameworks/base/media/jni/android_media_ExifInterface.cpp
++++ b/frameworks/base/media/jni/android_media_ExifInterface.cpp
+@@ -390,8 +390,7 @@
+     // Rewind the file descriptor.
+     fseek(file, 0L, SEEK_SET);
+ 
+-    std::unique_ptr<SkFILEStream> fileStream(new SkFILEStream(file,
+-                SkFILEStream::kCallerPasses_Ownership));
++     std::unique_ptr<SkFILEStream> fileStream(new SkFILEStream(file));
+     return getRawAttributes(env, fileStream.get(), false);
+ }
+ 
+--- a/vendor/cm/config/cm_audio.mk
++++ b/vendor/cm/config/cm_audio.mk
+@@ -9,35 +9,36 @@
+ 
+ # Alarms
+ PRODUCT_COPY_FILES += \
+-    $(ALARM_PATH)/CyanAlarm.ogg:system/media/audio/alarms/CyanAlarm.ogg \
+-    $(ALARM_PATH)/NuclearLaunch.ogg:system/media/audio/alarms/NuclearLaunch.ogg
+-
++    $(ALARM_PATH)/Helium.ogg:system/media/audio/alarms/Helium.ogg \
++    $(ALARM_PATH)/Oxygen.ogg:system/media/audio/alarms/Oxygen.ogg \
+ # Notifications
+ PRODUCT_COPY_FILES += \
+-    $(NOTIFICATION_PATH)/CyanDoink.ogg:system/media/audio/notifications/CyanDoink.ogg \
+-    $(NOTIFICATION_PATH)/CyanMail.ogg:system/media/audio/notifications/CyanMail.ogg \
+-    $(NOTIFICATION_PATH)/CyanMessage.ogg:system/media/audio/notifications/CyanMessage.ogg \
+-    $(NOTIFICATION_PATH)/Laser.ogg:system/media/audio/notifications/Laser.ogg \
+-    $(NOTIFICATION_PATH)/Naughty.ogg:system/media/audio/notifications/Naughty.ogg \
+-    $(NOTIFICATION_PATH)/Pong.ogg:system/media/audio/notifications/Pong.ogg \
+-    $(NOTIFICATION_PATH)/Rang.ogg:system/media/audio/notifications/Rang.ogg \
+-    $(NOTIFICATION_PATH)/Stone.ogg:system/media/audio/notifications/Stone.ogg
++    $(NOTIFICATION_PATH)/Blip.ogg:system/media/audio/notifications/Blip.ogg \
++    $(NOTIFICATION_PATH)/Chime.ogg:system/media/audio/notifications/Chime.ogg \
++    $(NOTIFICATION_PATH)/Element.ogg:system/media/audio/notifications/Element.ogg \
++    $(NOTIFICATION_PATH)/Hello.ogg:system/media/audio/notifications/Hello.ogg \
++    $(NOTIFICATION_PATH)/Organic.ogg:system/media/audio/notifications/Organic.ogg \
+ 
+ # Ringtones
+-ifeq ($(TARGET_NEEDS_BOOSTED_SOUNDS),true)
+ PRODUCT_COPY_FILES += \
+-	$(RINGTONE_PATH)/boosted/Boxbeat.ogg:system/media/audio/ringtones/Boxbeat.ogg \
+-	$(RINGTONE_PATH)/boosted/CyanTone.ogg:system/media/audio/ringtones/CyanTone.ogg \
+-	$(RINGTONE_PATH)/boosted/Highscore.ogg:system/media/audio/ringtones/Highscore.ogg \
+-	$(RINGTONE_PATH)/boosted/Lyon.ogg:system/media/audio/ringtones/Lyon.ogg \
+-	$(RINGTONE_PATH)/boosted/Rockin.ogg:system/media/audio/ringtones/Rockin.ogg
+-else
++    $(RINGTONE_PATH)/Awake.ogg:system/media/audio/ringtones/Awake.ogg \
++    $(RINGTONE_PATH)/Complex.ogg:system/media/audio/ringtones/Complex.ogg \
++    $(RINGTONE_PATH)/Hello.ogg:system/media/audio/ringtones/Hello.ogg \
++    $(RINGTONE_PATH)/Keys.ogg:system/media/audio/ringtones/Keys.ogg \
++    $(RINGTONE_PATH)/Momentum.ogg:system/media/audio/ringtones/Momentum.ogg \
++    $(RINGTONE_PATH)/Natural.ogg:system/media/audio/ringtones/Natural.ogg \
++    $(RINGTONE_PATH)/Onward.ogg:system/media/audio/ringtones/Onward.ogg \
++    $(RINGTONE_PATH)/Organic.ogg:system/media/audio/ringtones/Organic.ogg \
++    $(RINGTONE_PATH)/RobotsforEveryone.ogg:system/media/audio/ringtones/RobotsforEveryone.ogg \
++    $(RINGTONE_PATH)/Simple.ogg:system/media/audio/ringtones/Simple.ogg \
++    $(RINGTONE_PATH)/Strings.ogg:system/media/audio/ringtones/Strings.ogg \
++
++# UI
+ PRODUCT_COPY_FILES += \
+-    $(RINGTONE_PATH)/Boxbeat.ogg:system/media/audio/ringtones/Boxbeat.ogg \
+-    $(RINGTONE_PATH)/CyanTone.ogg:system/media/audio/ringtones/CyanTone.ogg \
+-    $(RINGTONE_PATH)/Highscore.ogg:system/media/audio/ringtones/Highscore.ogg \
+-    $(RINGTONE_PATH)/Lyon.ogg:system/media/audio/ringtones/Lyon.ogg \
+-    $(RINGTONE_PATH)/Rockin.ogg:system/media/audio/ringtones/Rockin.ogg \
+-    $(RINGTONE_PATH)/Sheep.mp3:system/media/audio/ringtones/Sheep.mp3 \
+-    $(RINGTONE_PATH)/Yukaay.ogg:system/media/audio/ringtones/Yukaay.ogg
+-endif
++    $(UI_PATH)/audio_end.ogg:system/media/audio/ui/audio_end.ogg \
++    $(UI_PATH)/audio_initiate.ogg:system/media/audio/ui/audio_initiate.ogg \
++    $(UI_PATH)/NFCFailure.ogg:system/media/audio/ui/NFCFailure.ogg \
++    $(UI_PATH)/NFCInitiated.ogg:system/media/audio/ui/NFCInitiated.ogg \
++    $(UI_PATH)/NFCSuccess.ogg:system/media/audio/ui/NFCSuccess.ogg \
++    $(UI_PATH)/NFCTransferComplete.ogg:system/media/audio/ui/NFCTransferComplete.ogg \
++    $(UI_PATH)/NFCTransferInitiated.ogg:system/media/audio/ui/NFCTransferInitiated.ogg \
+
+--- a/vendor/cm/config/common.mk
++++ b/vendor/cm/config/common.mk
+@@ -76,6 +76,10 @@
+ # This is CM!
+ PRODUCT_COPY_FILES += \
+     vendor/cm/config/permissions/com.cyanogenmod.android.xml:system/etc/permissions/com.cyanogenmod.android.xml
++
++# Phonelocation!
++PRODUCT_COPY_FILES +=  \
++vendor/cm/prebuilt/common/media/location/suda-phonelocation.dat:system/media/location/suda-phonelocation.dat
+ 
+ # Include CM audio files
+ include vendor/cm/config/cm_audio.mk
+@@ -119,7 +123,8 @@
+ PRODUCT_PACKAGES += \
+     AudioFX \
+     CMSettingsProvider \
+-    LineageSetupWizard \
++    SMSetupWizard \
++    PhoneLocationProvider \
+     Eleven \
+     ExactCalculator \
+     Jelly \
+
+--- a/system/core/adb/services.cpp
++++ b/system/core/adb/services.cpp
+@@ -81,12 +81,12 @@
+         }
+ 
+         char build_type[PROPERTY_VALUE_MAX];
+-        char sm_version[PROPERTY_VALUE_MAX];
++        char cm_version[PROPERTY_VALUE_MAX];
+         property_get("persist.sys.root_access", value, "0");
+         property_get("ro.build.type", build_type, "");
+-        property_get("ro.sm.version", sm_version, "");
+-
+-        if (strlen(sm_version) > 0 && strcmp(build_type, "eng") != 0 && (atoi(value) & 2) != 2) {
++        property_get("ro.cm.version", cm_version, "");
++
++        if (strlen(cm_version) > 0 && strcmp(build_type, "eng") != 0 && (atoi(value) & 2) != 2) {
+             WriteFdExactly(fd, "root access is disabled by system setting - enable in settings -> development options\n");
+             adb_close(fd);
+             return;
+
+--- a/system/core/debuggerd/tombstone.cpp
++++ b/system/core/debuggerd/tombstone.cpp
+@@ -167,13 +167,13 @@
+ static void dump_header_info(log_t* log) {
+   char fingerprint[PROPERTY_VALUE_MAX];
+   char revision[PROPERTY_VALUE_MAX];
+-  char sm_version[PROPERTY_VALUE_MAX];
+-
+-  property_get("ro.sm.version", sm_version, "unknown");
++  char cm_version[PROPERTY_VALUE_MAX];
++
++  property_get("ro.cm.version", cm_version, "unknown");
+   property_get("ro.build.fingerprint", fingerprint, "unknown");
+   property_get("ro.revision", revision, "unknown");
+ 
+-  _LOG(log, logtype::HEADER, "SudaMod Version: '%s'\n", sm_version);
++  _LOG(log, logtype::HEADER, "LineageOS Version: '%s'\n", cm_version);
+   _LOG(log, logtype::HEADER, "Build fingerprint: '%s'\n", fingerprint);
+   _LOG(log, logtype::HEADER, "Revision: '%s'\n", revision);
+   _LOG(log, logtype::HEADER, "ABI: '%s'\n", ABI_STRING);
+
+--- a/system/core/rootdir/init.rc
++++ b/system/core/rootdir/init.rc
+@@ -10,8 +10,8 @@
+ import /init.usb.configfs.rc
+ import /init.${ro.zygote}.rc
+ 
+-# Include SM's extra init file
+-import /init.sm.rc
++# Include CM's extra init file
++import /init.cm.rc
+ 
+ 
+ on early-init
+
