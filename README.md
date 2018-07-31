@@ -1,4 +1,4 @@
-# HOW-TO Build
+HOW-TO Build
 
     Initialize the repository
 
@@ -22,14 +22,17 @@ export WITH_SU=true
 
 export WITH_TWRP=true
 
-rename lineage.mk to sm.mk
-
 copy these:
 
 device/samsung/ja3gduosctc/configs/etc/spn-conf.xml
 
 packages/apps/OTAUpdates
 
-cd '/root/sudamod3.1'
+cd sudamod3.1/frameworks/base
 
+patch -p1 < mapcs.diff
+
+cd sudamod3.1
 patch -p1 < PATCH
+patch -p1 < setting.diff
+
