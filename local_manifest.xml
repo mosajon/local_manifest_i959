@@ -5,7 +5,8 @@
   
   <!-- Remove CM-specific repositories -->
   <remove-project name="LineageOS/android_packages_apps_Updater" />
-
+  <project path="packages/apps/OTAUpdates" name="mosajon/android_packages_apps_OTAUpdates" remote="github" />
+  
   <project path="bootable/recovery-twrp" name="omnirom/android_bootable_recovery" remote="github" revision="android-7.1" groups="pdk-cw-fs"/>
 
   <project path="external/busybox" name="LineageOS/android_external_busybox" />
